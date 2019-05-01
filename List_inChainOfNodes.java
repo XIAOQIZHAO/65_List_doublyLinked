@@ -10,7 +10,9 @@ public class List_inChainOfNodes{
       Construct an empty list
      */
     public List_inChainOfNodes() {
-        sentinel = new Node( null, new Node(null), new Node(null));
+        sentinel = new Node( null);
+	sentinel.setNextNode(sentinel);
+	sentinel.setPreviousNode(sentinel);
     }
 
     /**
@@ -24,7 +26,7 @@ public class List_inChainOfNodes{
     // recursively-called helper
     private int size( Node startingAt) {
         Node next = startingAt.getNextNode();
-        if( next == null) return 0;
+        if( next == sentinel) return 0;
         else return 1+ size( next);
     }
 
@@ -34,36 +36,36 @@ public class List_inChainOfNodes{
        format:
            # elements [element0,element1,element2,]
       */
-    public String toString() {
-        String stringRep = size() + " elements [";
-
-        for( Node node = sentinel.getNextNode()
-           ; node != null
-           ; node = node.getNextNode() )
-            stringRep += node.getCargo() + ",";
-        return stringRep + "]";
-    }
-
-
-    // /**
-    //   Demo use of links to previous Nodes.
-
-    //   @return a string representation of this list,
-    //           iterating through the list
-    //           from tail to head.
-    //   format, using ` as separator
-    //       [element0`element1`element2`]
-    //  */
     // public String toString() {
-    //     String stringRep = "tail-first [";
+    //     String stringRep = size() + " elements [";
 
-    //     for( Node node = sentinel.getPreviousNode();
-    // 	     node != null;
-    // 	     node = node.getPreviousNode()
-    //        )
-    //         stringRep += node.getCargo() + "`";
+    //     for( Node node = sentinel.getNextNode()
+    //        ; node != sentinel
+    //        ; node = node.getNextNode() )
+    //         stringRep += node.getCargo() + ",";
     //     return stringRep + "]";
     // }
+
+
+    /**
+      Demo use of links to previous Nodes.
+
+      @return a string representation of this list,
+              iterating through the list
+              from tail to head.
+      format, using ` as separator
+          [element0`element1`element2`]
+     */
+    public String toString() {
+        String stringRep = "tail-first [";
+
+        for( Node node = sentinel.getPreviousNode();
+    	     node != sentinel;
+    	     node = node.getPreviousNode()
+           )
+            stringRep += node.getCargo() + "`";
+        return stringRep + "]";
+    }
 
     
     /**
@@ -73,8 +75,7 @@ public class List_inChainOfNodes{
      */
      public boolean addAsHead( Object val) {
 	 Node newNode = new Node( val, sentinel.getNextNode(), sentinel);
-	 sentinel.setNextNode( newNode).setPreviousNode( newNode);
-	 
+	 sentinel.setNextNode( newNode).setPreviousNode( newNode);	 
 	 return true;
      }
 
@@ -138,10 +139,13 @@ public class List_inChainOfNodes{
      */
     public boolean add( int index, Object value) {
         Node newNode = new Node( value);
+	Node nodeBefore = getNodeBefore( index);
         Node afterNew = /* the node that should follow newNode
           in the augmented list */
-          getNodeBefore( index).setNextNode( newNode);
+          nodeBefore.setNextNode( newNode);
         newNode.setNextNode( afterNew);
+	afterNew.setPreviousNode(newNode);
+	newNode.setPreviousNode(nodeBefore);
         return true;
     }
 
@@ -159,6 +163,7 @@ public class List_inChainOfNodes{
         Node ax = before.getNextNode();
         Object saveForReturn = ax.getCargo();
         before.setNextNode( ax.getNextNode());
+	ax.getNextNode().setPreviousNode(before);
         return saveForReturn;
     }
 }
