@@ -13,6 +13,8 @@ public class List_inChainOfNodes{
         sentinel = new Node( null);
 	sentinel.setNextNode(sentinel);
 	sentinel.setPreviousNode(sentinel);
+        //sentinel = new Node( null, sentinel, sentinel);
+	//cannot use this
     }
 
     /**
