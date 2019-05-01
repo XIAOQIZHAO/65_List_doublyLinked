@@ -3,16 +3,14 @@
  */
 
 public class List_inChainOfNodes{
-    private Node headSentinel;
-    private Node tailSentinel;
+    private Node sentinel;
     
      
     /**
       Construct an empty list
      */
     public List_inChainOfNodes() {
-        headSentinel = new Node( null, tailSentinel, null);
-        tailSentinel = new Node( null, null, headSentinel);
+        sentinel = new Node( null, new Node(null), new Node(null));
     }
 
     /**
@@ -20,52 +18,52 @@ public class List_inChainOfNodes{
      */
     public int size() {
         // recursive approach seems more perspicuous
-        return size( tailSentinel);
+        return size( sentinel);
     }
 
     // recursively-called helper
-    private int size( Node endingAt) {
-        Node previous = endingAt.getPreviousNode();
-        if( previous == null) return 0;
-        else return 1+ size( previous);
+    private int size( Node startingAt) {
+        Node next = startingAt.getNextNode();
+        if( next == null) return 0;
+        else return 1+ size( next);
     }
 
 
-    //  /**
-    //    @return a string representation of this list,
-    //    format:
-    //        # elements [element0,element1,element2,]
-    //   */
-    // public String toString() {
-    //     String stringRep = size() + " elements [";
-
-    //     for( Node node = headSentinel.getNextNode()
-    //        ; node != null
-    //        ; node = node.getNextNode() )
-    //         stringRep += node.getCargo() + ",";
-    //     return stringRep + "]";
-    // }
-
-
-    /**
-      Demo use of links to previous Nodes.
-
-      @return a string representation of this list,
-              iterating through the list
-              from tail to head.
-      format, using ` as separator
-          [element0`element1`element2`]
-     */
+     /**
+       @return a string representation of this list,
+       format:
+           # elements [element0,element1,element2,]
+      */
     public String toString() {
-        String stringRep = "tail-first [";
+        String stringRep = size() + " elements [";
 
-        for( Node node = tailSentinel.getPreviousNode();
-    	     node != null;
-    	     node = node.getPreviousNode()
-           )
-            stringRep += node.getCargo() + "`";
+        for( Node node = sentinel.getNextNode()
+           ; node != null
+           ; node = node.getNextNode() )
+            stringRep += node.getCargo() + ",";
         return stringRep + "]";
     }
+
+
+    // /**
+    //   Demo use of links to previous Nodes.
+
+    //   @return a string representation of this list,
+    //           iterating through the list
+    //           from tail to head.
+    //   format, using ` as separator
+    //       [element0`element1`element2`]
+    //  */
+    // public String toString() {
+    //     String stringRep = "tail-first [";
+
+    //     for( Node node = sentinel.getPreviousNode();
+    // 	     node != null;
+    // 	     node = node.getPreviousNode()
+    //        )
+    //         stringRep += node.getCargo() + "`";
+    //     return stringRep + "]";
+    // }
 
     
     /**
@@ -74,13 +72,9 @@ public class List_inChainOfNodes{
       @return true, in keeping with conventions yet to be discussed
      */
      public boolean addAsHead( Object val) {
-	 // Node oldHead = headSentinel.getNextNode();
-	 Node newHead =
-	     new Node( val, headSentinel.getNextNode(), headSentinel);
-	 System.out.println(headSentinel.getNextNode());
-	 headSentinel.setNextNode( newHead);
-	 newHead.getNextNode().setPreviousNode(newHead);
-	 // oldHead.setPreviousNode( newHead);
+	 Node newNode = new Node( val, sentinel.getNextNode(), sentinel);
+	 sentinel.setNextNode( newNode).setPreviousNode( newNode);
+	 
 	 return true;
      }
 
@@ -95,9 +89,9 @@ public class List_inChainOfNodes{
            
         Node node;
         int upTo;  // comma operator precludes declaration in FOR
-        for( upTo = 0   , node = tailSentinel
+        for( upTo = 0   , node = sentinel
            ; upTo < index
-           ; upTo++     , node = node.getPreviousNode()
+           ; upTo++     , node = node.getNextNode()
            )
            ;  // null loop body since all the action is in the FOR
         return node;
