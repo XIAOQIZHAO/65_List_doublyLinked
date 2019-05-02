@@ -62,7 +62,9 @@ public class List_inChainOfNodes{
         String stringRep = "tail-first [";
 
         for( Node node = sentinel.getPreviousNode();
-    	     node != sentinel;
+    	     node != sentinel; // has to be sentinel, not null here
+	                       // there is no null value for previous/nextNode
+	                       // after setting the nodes in a loop
     	     node = node.getPreviousNode()
            )
             stringRep += node.getCargo() + "`";
@@ -79,6 +81,11 @@ public class List_inChainOfNodes{
 	 Node newNode = new Node( val, sentinel.getNextNode(), sentinel);
 	 sentinel.setNextNode( newNode).setPreviousNode( newNode);	 
 	 return true;
+
+	 //if use linkNext()
+	//  Node newNode = new Node( val);
+        // newNode.linkNext( headSentinel.linkNext( newNode));
+        // return true;
      }
 
 
@@ -149,6 +156,14 @@ public class List_inChainOfNodes{
 	afterNew.setPreviousNode(newNode);
 	newNode.setPreviousNode(nodeBefore);
         return true;
+
+	//if use linkNext()
+	// Node newNode = new Node( value);
+        // Node afterNew = /* the node that should follow newNode
+        //   in the augmented list */
+        //   getNodeBefore( index).linkNext( newNode);
+        // newNode.linkNext( afterNew);
+        // return true;
     }
 
 
@@ -167,5 +182,12 @@ public class List_inChainOfNodes{
         before.setNextNode( ax.getNextNode());
 	ax.getNextNode().setPreviousNode(before);
         return saveForReturn;
+
+	// if use linkNext()
+	// Node before = getNodeBefore( index);
+        // Node ax = before.getNextNode();
+        // Object saveForReturn = ax.getCargo();
+        // before.linkNext( ax.getNextNode());
+        // return saveForReturn;
     }
 }
